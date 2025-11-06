@@ -1,7 +1,7 @@
 # 🧩 Auto Session Starter (Chrome Extension)
 
 > Tiện ích mở rộng giúp **tự động kiểm tra và click nút “Start session”** trên trang  
-> [sm.midnight.gd/wizard/mine](https://sm.midnight.gd/wizard/mine) mỗi 30 giây.
+> [sm.midnight.gd/wizard/mine](https://sm.midnight.gd/wizard/mine)
 
 ---
 
@@ -9,7 +9,7 @@
 - Tự động phát hiện nút **Start session**
 - Tự động click khi phát hiện nút ở trạng thái “Start session”
 - Hoạt động nền (background) – không cần thao tác thủ công
-- Tùy chỉnh chu kỳ kiểm tra (mặc định: 30 giây)
+- Tùy chỉnh chu kỳ kiểm tra 
 
 ---
 
