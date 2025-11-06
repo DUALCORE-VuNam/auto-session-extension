@@ -22,7 +22,7 @@
 4. Bật **Developer mode** (chế độ nhà phát triển)
 5. Chọn **Load unpacked** → chọn thư mục vừa giải nén
 6. Mở trang [sm.midnight.gd/wizard/mine](https://sm.midnight.gd/wizard/mine)
-7. Extension sẽ tự động click “Start session” mỗi 30 giây 🧙‍♂️
+7. Extension sẽ tự động click “Start session” mỗi min-max: 30s-180s.
 
 ---
 
