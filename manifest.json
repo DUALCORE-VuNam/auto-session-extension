@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Session Starter",
+  "version": "1.0",
+  "description": "Tự động bấm nút Start session mỗi phút trên trang sm.midnight.gd.",
+  "permissions": ["alarms", "tabs", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://sm.midnight.gd/wizard/mine*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Auto Session Starter"
+  }
+}
