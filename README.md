@@ -5,6 +5,8 @@
 
 ---
 
+![Uploading Thiết kế chưa có tên.gif…]()
+
 ## 🚀 Tính năng chính
 - Tự động phát hiện nút **Start session**
 - Tự động click khi phát hiện nút ở trạng thái “Start session”
