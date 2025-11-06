@@ -3,10 +3,6 @@
 > Tiện ích mở rộng giúp **tự động kiểm tra và click nút “Start session”** trên trang  
 > [sm.midnight.gd/wizard/mine](https://sm.midnight.gd/wizard/mine) mỗi 30 giây.
 
-![GitHub repo size](https://img.shields.io/github/repo-size/<username>/auto-session-extension)
-![GitHub last commit](https://img.shields.io/github/last-commit/<username>/auto-session-extension)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-
 ---
 
 ## 🚀 Tính năng chính
@@ -20,7 +16,7 @@
 ## ⚙️ Cách cài đặt
 
 ### 🧱 Cách 1: Tải về và cài thủ công
-1. [**Tải bản ZIP tại đây**](https://github.com/<username>/auto-session-extension/archive/refs/heads/main.zip)
+1. [**Tải bản ZIP tại đây**](https://github.com/DUALCORE-VuNam/auto-session-extension/archive/refs/heads/main.zip)
 2. Giải nén file `.zip`  
 3. Mở **Chrome** → truy cập `chrome://extensions/`
 4. Bật **Developer mode** (chế độ nhà phát triển)
@@ -32,4 +28,4 @@
 
 ### 🧰 Cách 2: Clone trực tiếp từ GitHub
 ```bash
-git clone https://github.com/<username>/auto-session-extension.git
+git clone https://github.com/DUALCORE-VuNam/auto-session-extension.git
