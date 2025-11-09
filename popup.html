@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>Auto Session Starter</title>
+  <style>
+    body { font-family: sans-serif; width: 260px; padding: 12px; background: #f8fafc; color: #111; }
+    h2 { margin: 0 0 10px; font-size: 16px; text-align: center; }
+    .info { font-size: 13px; margin-bottom: 8px; line-height: 1.4; }
+    .info div { margin-bottom: 4px; }
+    button { width: 100%; padding: 8px 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 6px; }
+    #pause { background: #f39c12; color: #fff; }
+    #resume { background: #2ecc71; color: #fff; display: none; }
+    #refresh { background: #3498db; color: #fff; }
+    .small { font-size: 12px; color: #666; margin-top: 8px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>Auto Session Starter</h2>
+  <div class="info">
+    <div>🟢 Trạng thái: <span id="status">--</span></div>
+    <div>⚡ Số lần auto start: <span id="clickCount">0</span></div>
+  </div>
+
+  <button id="pause">⏸ Tạm dừng</button>
+  <button id="resume">▶️ Tiếp tục</button>
+  <button id="refresh">🔁 Refresh ngay</button>
+
+  <div class="small">Phiên bản 1.5</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
