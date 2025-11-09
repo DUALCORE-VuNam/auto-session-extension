@@ -1,42 +1,44 @@
-chrome.runtime.onInstalled.addListener(() => {
-  console.log("[Auto Session Starter] Installed and initializing...");
-  
-  startAutoCheck();
-});
+// background.js
+// Mục đích: Giữ worker thức, inject content.js định kỳ, cho phép pause/resume qua popup
 
-function startAutoCheck() {
-  console.log("[Auto Session Starter] Auto-check started (every 30s)");
-  
-  setInterval(() => {
-    console.log("[Auto Session Starter] Timer triggered — scanning tabs...");
+const CHECK_INTERVAL = 30 * 1000;  // 30s kiểm tra
+const KEEP_ALIVE_INTERVAL = 25 * 1000; // ping giữ worker thức
+
+console.log("[M9 AutoStarter] Background active.");
+
+// Ping nhẹ để tránh worker sleep
+function keepAlive() {
+  chrome.runtime.getPlatformInfo(() => {
+    console.log("[M9 AutoStarter] keepAlive ping", new Date().toLocaleTimeString());
+  });
+}
+
+// Gửi script vào tab M9 để đảm bảo content chạy
+function injectContent() {
+  chrome.storage.local.get(["isPaused"], (data) => {
+    if (data.isPaused) {
+      console.log("[M9 AutoStarter] Paused.");
+      return;
+    }
 
     chrome.tabs.query({ url: "https://sm.midnight.gd/wizard/mine*" }, (tabs) => {
-      if (!tabs || tabs.length === 0) {
-        console.log("[Auto Session Starter] ❌ No matching tabs found.");
-        return;
-      }
-
-  
       for (const tab of tabs) {
         chrome.scripting.executeScript(
-          {
-            target: { tabId: tab.id },
-            files: ["content.js"]
-          },
+          { target: { tabId: tab.id }, files: ["content.js"] },
           () => {
             if (chrome.runtime.lastError) {
-              console.warn(
-                `[Auto Session Starter] ⚠️ Failed to inject into tab ${tab.id}:`,
-                chrome.runtime.lastError.message
-              );
+              console.warn("Injection failed:", chrome.runtime.lastError.message);
             } else {
-              console.log(
-                `[Auto Session Starter] ✅ Script injected into tab ${tab.id}.`
-              );
+              console.log("[M9 AutoStarter] Injected into tab", tab.id);
             }
           }
         );
       }
     });
-  }, 30000); // 30 giây
+  });
 }
+
+setInterval(keepAlive, KEEP_ALIVE_INTERVAL);
+setInterval(injectContent, CHECK_INTERVAL);
+keepAlive();
+injectContent();
