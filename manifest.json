@@ -1,19 +1,30 @@
 {
   "manifest_version": 3,
-  "name": "Auto Session Starter",
-  "version": "1.0",
-  "description": "Tự động bấm nút Start session mỗi phút trên trang sm.midnight.gd./wizard/mine",
-  "permissions": ["alarms", "tabs", "scripting"],
+  "name": "Auto Session Starter for M9",
+  "version": "1.5",
+  "description": "Giữ kết nối M9, tự phục hồi khi session treo, và tự click Start session khi reload.",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://sm.midnight.gd/*"
+  ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Auto Session Starter"
   },
   "content_scripts": [
     {
       "matches": ["https://sm.midnight.gd/wizard/mine*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
-  ],
-  "action": {
-    "default_title": "Auto Session Starter"
-  }
+  ]
 }
