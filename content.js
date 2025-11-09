@@ -1,70 +1,57 @@
-(() => {
-  console.log("[Auto Session Starter] content script loaded:", window.location.href);
+// content.js
+(function () {
+  console.log("[M9 AutoStarter] Content script active.");
 
-  const MIN_CLICK_INTERVAL = 30 * 1000;
-  let lastClicked = 0;
+  // --- Cấu hình ---
+  const SILENT_TIMEOUT = 10 * 60 * 1000; // 10 phút không hoạt động => refresh
+  const CHECK_INTERVAL = 60 * 1000; // kiểm tra mỗi phút
+  const SAFE_MARGIN = 60 * 1000; // cộng thêm 1 phút an toàn
+  let lastActivity = Date.now();
 
+  // --- Hook fetch để ghi nhận hoạt động mạng ---
+  const origFetch = window.fetch;
+  window.fetch = async (...args) => {
+    lastActivity = Date.now();
+    return origFetch.apply(this, args);
+  };
 
-  function findAndClickStartSession() {
-    try {
-   
-      const buttons = Array.from(document.querySelectorAll("button"));
-      for (const btn of buttons) {
-        const text = (btn.textContent || "").trim().toLowerCase();
-        if (text === "start session") {
-          const now = Date.now();
-          if (now - lastClicked < MIN_CLICK_INTERVAL) {
-            console.log("[Auto Session Starter] Đã click gần đây, bỏ qua.");
-            return { clicked: false, reason: "debounced" };
-          }
-     
-          const isDisabled = btn.disabled || btn.getAttribute("aria-disabled") === "true";
+  // --- Auto click "Start session" ---
+  function tryClickStartSession() {
+    const btn = Array.from(document.querySelectorAll("button")).find(b => {
+      const txt = (b.textContent || "").toLowerCase();
+      return txt.includes("start session");
+    });
+    if (btn && !btn.disabled) {
+      btn.click();
+      console.log("[M9 AutoStarter] ✅ Auto-clicked Start session");
 
-          if (isDisabled) {
-            console.log("[Auto Session Starter] Nút bị disabled, không click.");
-            return { clicked: false, reason: "disabled" };
-          }
-
-          btn.click();
-          lastClicked = now;
-          console.log("[Auto Session Starter] ✅ Auto-clicked Start session!");
-          return { clicked: true };
-        }
-      }
-      return { clicked: false, reason: "not_found" };
-    } catch (e) {
-      console.error("[Auto Session Starter] error in findAndClickStartSession:", e);
-      return { clicked: false, reason: "error", error: String(e) };
+      chrome.storage.local.get(["clickCount"], (data) => {
+        const count = (data.clickCount || 0) + 1;
+        chrome.storage.local.set({ clickCount: count });
+      });
+    } else {
+      console.log("[M9 AutoStarter] 🟢 Session active or button unavailable");
     }
   }
 
+  // --- Theo dõi im lặng ---
+  setInterval(() => {
+    const now = Date.now();
+    const idle = now - lastActivity;
 
-  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    if (msg && msg.type === "CHECK_AND_CLICK") {
-      const result = findAndClickStartSession();
-      sendResponse?.(result);
+    if (idle > SILENT_TIMEOUT + SAFE_MARGIN) {
+      console.warn("[M9 AutoStarter] 💀 Không thấy hoạt động mạng lâu → reload trang...");
+      location.reload();
+    } else {
+      const left = Math.max(0, SILENT_TIMEOUT - idle);
+      console.log(`[M9 AutoStarter] Active: ${Math.round(left / 60000)}m đến lần kiểm tra tiếp`);
     }
-  });
+  }, CHECK_INTERVAL);
 
-
-  const observer = new MutationObserver((mutations) => {
- 
-    for (const m of mutations) {
-      if (m.addedNodes && m.addedNodes.length) {
-  
-        findAndClickStartSession();
-        break;
-      }
-    }
-  });
-
-  observer.observe(document.documentElement || document.body, {
-    childList: true,
-    subtree: true
-  });
-
-
-  setTimeout(() => {
-    findAndClickStartSession();
-  }, 2000);
+  // --- Tự động click khi trang load ---
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", tryClickStartSession);
+  } else {
+    tryClickStartSession();
+  }
 })();
